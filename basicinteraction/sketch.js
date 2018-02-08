@@ -1,6 +1,6 @@
 // Basic Interaction Demo
 // Feb 7, 2018
-// Dan Schellenberg
+// Catherine Liu
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
