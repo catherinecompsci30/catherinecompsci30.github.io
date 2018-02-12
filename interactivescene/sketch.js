@@ -10,10 +10,11 @@ function setup() {
 function draw() {
   background(255);
   noStroke();
-  drawRainbow(width / 2, height / 2);
+  drawRainbow();
+  noLoop();
 }
 
-function drawRainbow(x, y) {
+function drawRainbow() {
   x = 600
   y = 450
   fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
@@ -31,7 +32,7 @@ function drawRainbow(x, y) {
   fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
   arc(width / 2, height / 2, x-300, y-300, Math.PI, Math.PI, true);
   fill(255);
-  arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true);
+  arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true); //pick random from that colour
 }
 
 let colour1 = 0;
