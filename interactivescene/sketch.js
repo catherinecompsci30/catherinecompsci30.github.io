@@ -11,13 +11,12 @@ function draw() {
   background(255);
   noStroke();
   drawRainbow();
-  noLoop();
 }
 
 function drawRainbow() {
   x = 600
   y = 450
-  fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
+  fill(colour1, 0, 0);
   arc(width / 2, height / 2, x, y, Math.PI, Math.PI, true);
   fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
   arc(width / 2, height / 2, x-50, y-50, Math.PI, Math.PI, true);
@@ -35,16 +34,16 @@ function drawRainbow() {
   arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true); //pick random from that colour
 }
 
-let colour1 = 0;
-let colour2 = 0;
-let colour3 = 0;
+let colour1 = 20;
+let colour2 = 10;
+let colour3 = 10;
 
 function mouseDragged() {
-  colour1 += 5;
+  colour1 += 3;
   colour2 += 7;
   colour3 += 9;
-  if (colour1 > 250) {
-    colour1 = 0
+  if (colour1 > 255) {
+    colour1 = 50
   }
   if (colour2 > 250) {
     colour2 = 0
