@@ -18,13 +18,13 @@ function drawRainbow() {
   y = 450
   fill(colour1, 0, 0);
   arc(width / 2, height / 2, x, y, Math.PI, Math.PI, true);
-  fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
+  fill(255, colour2, 0);
   arc(width / 2, height / 2, x-50, y-50, Math.PI, Math.PI, true);
-  fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
+  fill(255, colour2 + 60, 0);
   arc(width / 2, height / 2, x-100, y-100, Math.PI, Math.PI, true);
-  fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
+  fill(colour1 - 30, 255, 0);
   arc(width / 2, height / 2, x-150, y-150, Math.PI, Math.PI, true);
-  fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
+  fill(0, colour2 - 40 ,255);
   arc(width / 2, height / 2, x-200, y-200, Math.PI, Math.PI, true);
   fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
   arc(width / 2, height / 2, x-250, y-250, Math.PI, Math.PI, true);
@@ -34,19 +34,19 @@ function drawRainbow() {
   arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true); //pick random from that colour
 }
 
-let colour1 = 20;
-let colour2 = 10;
+let colour1 = 150;
+let colour2 = 60;
 let colour3 = 10;
 
 function mouseDragged() {
-  colour1 += 3;
-  colour2 += 7;
+  colour1 += 1;
+  colour2 += 2;
   colour3 += 9;
-  if (colour1 > 255) {
-    colour1 = 50
+  if (colour1 > 240) {
+    colour1 = 150
   }
-  if (colour2 > 250) {
-    colour2 = 0
+  if (colour2 > 200) {
+    colour2 = 60
   }
   if (colour3 > 250) {
     colour3 = 0
