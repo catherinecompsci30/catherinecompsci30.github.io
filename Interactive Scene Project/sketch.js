@@ -2,53 +2,118 @@
 // Catherine Liu
 // Feb 9, 2018
 
+let mode;
+
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  mode = 1;
 }
 
 
 function draw() {
   background(255);
   noStroke();
-  drawRainbow();
+
+  if (mode === 1) {
+    changeColour();
+  }
+
+  if (mode === 2) {
+    uniqueRainbow();
+  }
 }
 
-function drawRainbow() {
+function changeColour() {
   x = 600
   y = 450
-  fill(colour1, 0, 0);
-  arc(width / 2, height / 2, x, y, Math.PI, Math.PI, true);
-  fill(255, colour2, 0);
-  arc(width / 2, height / 2, x-50, y-50, Math.PI, Math.PI, true);
-  fill(255, colour2 + 60, 0);
-  arc(width / 2, height / 2, x-100, y-100, Math.PI, Math.PI, true);
-  fill(colour1 - 30, 255, 0);
-  arc(width / 2, height / 2, x-150, y-150, Math.PI, Math.PI, true);
-  fill(0, colour2 - 40 ,255);
-  arc(width / 2, height / 2, x-200, y-200, Math.PI, Math.PI, true);
-  fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
-  arc(width / 2, height / 2, x-250, y-250, Math.PI, Math.PI, true);
-  fill(colour1 + random(20, 100), colour2 + random(20, 100), colour3 + random(20, 100));
-  arc(width / 2, height / 2, x-300, y-300, Math.PI, Math.PI, true);
-  fill(255);
-  arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true); //pick random from that colour
+
+  if (mouseX < width / 2) {
+    //red layer
+    fill(255, random(0, 64), 0);
+    arc(width / 2, height / 2, x, y, Math.PI, Math.PI, true);
+    //orange layer
+    fill(255, random(128, 191), 0);
+    arc(width / 2, height / 2, x-50, y-50, Math.PI, Math.PI, true);
+    //yellow layer
+    fill(random(191, 255), 255, 0);
+    arc(width / 2, height / 2, x-100, y-100, Math.PI, Math.PI, true);
+    //green layer
+    fill(random(0, 190), 255, 0);
+    arc(width / 2, height / 2, x-150, y-150, Math.PI, Math.PI, true);
+    //blue layer
+    fill(0, random(0, 255) ,255);
+    arc(width / 2, height / 2, x-200, y-200, Math.PI, Math.PI, true);
+    //indigo layer
+    fill(random(64, 130), 0, 255);
+    arc(width / 2, height / 2, x-250, y-250, Math.PI, Math.PI, true);
+    //violet layer
+    fill(random(130, 255), 0, 255);
+    arc(width / 2, height / 2, x-300, y-300, Math.PI, Math.PI, true);
+
+    //extra white space underneath rainbow
+    fill(255);
+    arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true); //pick random from that colour
+  }
+
+
+  else if (mouseX > width / 2) {
+    fill(random(0, 255));
+    arc(width / 2, height / 2, x, y, Math.PI, Math.PI, true);
+    fill(random(0, 255));
+    arc(width / 2, height / 2, x-50, y-50, Math.PI, Math.PI, true);
+    fill(random(0, 255));
+    arc(width / 2, height / 2, x-100, y-100, Math.PI, Math.PI, true);
+    fill(random(0, 255));
+    arc(width / 2, height / 2, x-150, y-150, Math.PI, Math.PI, true);
+    fill(random(0, 255));
+    arc(width / 2, height / 2, x-200, y-200, Math.PI, Math.PI, true);
+    fill(random(0, 255));
+    arc(width / 2, height / 2, x-250, y-250, Math.PI, Math.PI, true);
+    fill(random(0, 255));
+    arc(width / 2, height / 2, x-300, y-300, Math.PI, Math.PI, true);
+
+    //extra white space underneath rainbow
+    fill(255);
+    arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true); //pick random from that colour
+  }
 }
 
-let colour1 = 150;
-let colour2 = 60;
-let colour3 = 10;
+function uniqueRainbow() {
+    background(255);
+    stroke(80);
+    fill(255);
+    arc(width / 2, height / 2, x, y, Math.PI, Math.PI, true);
+    arc(width / 2, height / 2, x-50, y-50, Math.PI, Math.PI, true);
+    arc(width / 2, height / 2, x-100, y-100, Math.PI, Math.PI, true);
+    arc(width / 2, height / 2, x-150, y-150, Math.PI, Math.PI, true);
+    arc(width / 2, height / 2, x-200, y-200, Math.PI, Math.PI, true);
+    arc(width / 2, height / 2, x-250, y-250, Math.PI, Math.PI, true);
+    arc(width / 2, height / 2, x-300, y-300, Math.PI, Math.PI, true);
 
-function mouseDragged() {
-  colour1 += 1;
-  colour2 += 2;
-  colour3 += 9;
-  if (colour1 > 240) {
-    colour1 = 150
-  }
-  if (colour2 > 200) {
-    colour2 = 60
-  }
-  if (colour3 > 250) {
-    colour3 = 0
-  }
+    //extra white space underneath rainbow
+    fill(255);
+    arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true); //pick random from that colour
 }
+
+function keyTyped() {
+  if (key === "1") {
+    mode = 1;
+  }
+  else if (key === "2") {
+    mode = 2;
+  }
+
+
+function mouseWheel(event) {
+  print(event.delta);
+  //move the square according to the vertical scroll amount
+  pos += event.delta;
+  //uncomment to block page scrolling
+  //return false
+}
+
+
+// To add:
+// - make the colours static in rainbow
+// - typing a letter changes the colours i.e. "r" makes first layer red
