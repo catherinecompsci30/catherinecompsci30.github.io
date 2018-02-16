@@ -1,15 +1,11 @@
 // Interactive Scene
 // Catherine Liu
-// Feb 9, 2018
+// Feb , 2018
 
 let mode;
-let redColour;
-let orangeColour;
-let yellowColour;
-let greenColour;
-let blueColour;
-let indigoColour;
-let violetColour;
+let x, y;
+let redColour, orangeColour, yellowColour, greenColour, blueColour, indigoColour, violetColour;
+let grayScale = [0, 40, 80, 120, 160, 200, 240, 255];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -22,7 +18,6 @@ function setup() {
   blueColour = random(0, 255);
   indigoColour = random(64, 130);
   violetColour = random(130, 255);
-  greyScale = random(0, 255);
 
 }
 
@@ -41,8 +36,8 @@ function draw() {
 }
 
 function changeColour() {
-  x = 600
-  y = 450
+  x = 600;
+  y = 450;
 
   if (mouseX < width / 2) {
     //red layer
@@ -72,32 +67,13 @@ function changeColour() {
     arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true); //pick random from that colour
   }
 
-  //
-  // else if (mouseX > width / 2) {
-  //   for (let arcX = x; arcX > 299; arc - 50) {
-  //     for (let arcY = y; arcY > 149; arcY - 50) {
-  //
-  //     }
-  //   }
-  else if (mouseX > width / 2) {
-    fill(random(0, 255));
-    arc(width / 2, height / 2, x, y, Math.PI, Math.PI, true);
-    fill(random(0, 255));
-    arc(width / 2, height / 2, x-50, y-50, Math.PI, Math.PI, true);
-    fill(random(0, 255));
-    arc(width / 2, height / 2, x-100, y-100, Math.PI, Math.PI, true);
-    fill(random(0, 255));
-    arc(width / 2, height / 2, x-150, y-150, Math.PI, Math.PI, true);
-    fill(random(0, 255));
-    arc(width / 2, height / 2, x-200, y-200, Math.PI, Math.PI, true);
-    fill(random(0, 255));
-    arc(width / 2, height / 2, x-250, y-250, Math.PI, Math.PI, true);
-    fill(random(0, 255));
-    arc(width / 2, height / 2, x-300, y-300, Math.PI, Math.PI, true);
-
-    //extra white space underneath rainbow
-    fill(255);
-    arc(width / 2, height / 2, x-350, y-350, Math.PI, Math.PI, true); //pick random from that colour
+  else {
+    for (let shade = 0; shade < grayScale.length; shade++) {
+      fill(grayScale[shade]);
+      arc(width / 2, height / 2, x, y, Math.PI, Math.PI, true);
+      x -= 50;
+      y -= 50;
+    }
   }
 }
 
@@ -105,6 +81,8 @@ function uniqueRainbow() {
     background(255);
     stroke(80);
     fill(255);
+    x = 600;
+    y = 450;
     arc(width / 2, height / 2, x, y, Math.PI, Math.PI, true);
     arc(width / 2, height / 2, x-50, y-50, Math.PI, Math.PI, true);
     arc(width / 2, height / 2, x-100, y-100, Math.PI, Math.PI, true);
@@ -126,7 +104,3 @@ function keyTyped() {
     mode = 2;
   }
 }
-
-
-// - make the colours static in black and white rainbow
-// - typing a letter changes the colours i.e. "r" makes first layer red
