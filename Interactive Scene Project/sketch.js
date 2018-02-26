@@ -1,6 +1,6 @@
 // Interactive Scene
 // Catherine Liu
-// Feb 26, 2018
+// Feb. 26, 2018
 //
 //Press keys '1' and '2' to switch between two modes. The initial mode will always be Mode 1, which displays
 //a coloured or grayscale rainbow depending on the location of the mouse. Mode 2 allows the user to choose
@@ -149,11 +149,11 @@ function uniqueRainbow() {
   background(255);
   stroke(80);
 
-  //starting variables for the size of each arc
+  //starting variables for the size of each arc.
   x = 600;
   y = 450;
 
-  //fills each arc with RGB values from corresponding array
+  //fills each arc with RGB values from corresponding array.
 
   //first arc.
   fill(arc1[0], arc1[1], arc1[2]);
