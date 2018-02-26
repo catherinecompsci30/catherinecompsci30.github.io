@@ -2,9 +2,9 @@
 // Catherine Liu
 // Feb 26, 2018
 //
-//Press keys '1' and '2' to switch between two modes. Mode 1 displays a coloured or grayscale rainbow depending
-//on the position of the mouse. Mode 2 allows the user to choose the colour of each arc by clicking buttons to
-//fill the rainbow in order from top to bottom.
+//Press keys '1' and '2' to switch between two modes. The initial mode will always be Mode 1, which displays
+//a coloured or grayscale rainbow depending on the location of the mouse. Mode 2 allows the user to choose
+//the colour of each rainbow arc by clicking buttons to fill the rainbow in order from top to bottom.
 //
 //Extra for Experts:
 // - used the random function so that the coloured rainbow has different hues of each colour
@@ -42,7 +42,7 @@ arc7 = [255, 255, 255];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  //the page will automatically load mode 1 at the start
+  //the page will automatically load mode 1 at the start.
   mode = 1;
 
   //assigns a random number value within a certain range to colour variables
@@ -84,7 +84,7 @@ function draw() {
   //if it is mode 2, the screen will change to show the outline of a rainbow
   //without any colours.
   if (mode === 2) {
-    //loads buttons for the user to click and choose colours
+    //loads buttons for the user to click and choose colours.
     buttons();
     uniqueRainbow();
   }
@@ -92,9 +92,9 @@ function draw() {
 
 
 
-//determines whether the rainbow displayed will be coloured or grayscale
+//determines whether the rainbow displayed will be coloured or grayscale.
 function changeColour() {
-  //starting variables for the size of each arc
+  //starting variables for the size of each arc.
   x = 600;
   y = 450;
 
@@ -103,29 +103,29 @@ function changeColour() {
   if (mouseX < width / 2) {
     //'Math.PI' draws a semi-circle because a full circle is 2*PI in radians.
 
-    //red layer
+    //red layer.
     fill(255, redColour, 0);
     arc(width / 2, height / 2, x, y, Math.PI, Math.PI);
-    //orange layer
+    //orange layer.
     fill(255, orangeColour, 0);
     arc(width / 2, height / 2, x - 50, y - 50, Math.PI, Math.PI);
-    //yellow layer
+    //yellow layer.
     fill(yellowColour, 255, 0);
     arc(width / 2, height / 2, x - 100, y - 100, Math.PI, Math.PI);
-    //green layer
+    //green layer.
     fill(greenColour, 255, 0);
     arc(width / 2, height / 2, x - 150, y - 150, Math.PI, Math.PI);
-    //blue layer
+    //blue layer.
     fill(0, blueColour, 255);
     arc(width / 2, height / 2, x - 200, y - 200, Math.PI, Math.PI);
-    //indigo layer
+    //indigo layer.
     fill(indigoColour, 0, 255);
     arc(width / 2, height / 2, x - 250, y - 250, Math.PI, Math.PI);
-    //violet layer
+    //violet layer.
     fill(violetColour, 0, 255);
     arc(width / 2, height / 2, x - 300, y - 300, Math.PI, Math.PI);
 
-    //extra white space underneath rainbow
+    //extra white space underneath rainbow.
     fill(255);
     arc(width / 2, height / 2, x - 350, y - 350, Math.PI, Math.PI);
   }
@@ -155,29 +155,29 @@ function uniqueRainbow() {
 
   //fills each arc with RGB values from corresponding array
 
-  //first arc
+  //first arc.
   fill(arc1[0], arc1[1], arc1[2]);
   arc(width / 2, height / 2, x, y, Math.PI, Math.PI);
-  //second arc
+  //second arc.
   fill(arc2[0], arc2[1], arc2[2]);
   arc(width / 2, height / 2, x - 50, y - 50, Math.PI, Math.PI);
-  //third arc
+  //third arc.
   fill(arc3[0], arc3[1], arc3[2]);
   arc(width / 2, height / 2, x - 100, y - 100, Math.PI, Math.PI);
-  //fourth arc
+  //fourth arc.
   fill(arc4[0], arc4[1], arc4[2]);
   arc(width / 2, height / 2, x - 150, y - 150, Math.PI, Math.PI);
-  //fifth arc
+  //fifth arc.
   fill(arc5[0], arc5[1], arc5[2]);
   arc(width / 2, height / 2, x - 200, y - 200, Math.PI, Math.PI);
-  //sixth arc
+  //sixth arc.
   fill(arc6[0], arc6[1], arc6[2]);
   arc(width / 2, height / 2, x - 250, y - 250, Math.PI, Math.PI);
-  //seventh arc
+  //seventh arc.
   fill(arc7[0], arc7[1], arc7[2]);
   arc(width / 2, height / 2, x - 300, y - 300, Math.PI, Math.PI);
 
-  //extra white space underneath rainbow
+  //extra white space underneath rainbow.
   fill(255);
   arc(width / 2, height / 2, x - 350, y - 350, Math.PI, Math.PI);
 }
