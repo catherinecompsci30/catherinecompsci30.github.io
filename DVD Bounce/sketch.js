@@ -1,8 +1,12 @@
 // DVD Bounce - The Office Shoutout
 // Catherine Liu
 // Feb 15, 2018
+// DVD Bounce - The Office Shoutout
+// Catherine Liu
+// Feb 15, 2018
 
 // global variables
+let state;
 let x, y, radius;
 let dx, dy;
 let dvd, dvdColor;
@@ -13,6 +17,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  state = 1;
   x = width / 2;
   y = height / 2;
   radius = 50;
@@ -23,8 +28,13 @@ function setup() {
 
 function draw() {
   background(255);
-  moveThing();
-  displayThing();
+  if (state === 1) {
+    startScreen();
+  }
+  if (state === 2) {
+    moveThing();
+    displayThing();
+  }
 }
 
 function moveThing() {
@@ -49,4 +59,21 @@ function displayThing() {
   imageMode(CENTER);
   tint(dvdColor);
   image(dvd, x, y);
+}
+
+function startScreen() {
+  fill(255, 0, 0);
+  rectMode(CENTER);
+  rect (width/2, height/2, 200, 100);
+  fill(0);
+  textSize(32);
+  text("PLAY", width/2 - 40, height/2 + 10);
+}
+
+function switchScreen() {
+  if (mouseIsPressed) {
+    if ((mouseX > width/2 - 100 && mouseX < width/2 + 100) && (mouseY > height/2 - 50 && mouseY < height/2 + 50)) {
+      state = 2;
+    }
+  }
 }
