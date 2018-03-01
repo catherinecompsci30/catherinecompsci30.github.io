@@ -1,9 +1,7 @@
 // DVD Bounce - The Office Shoutout
 // Catherine Liu
 // Feb 15, 2018
-// DVD Bounce - The Office Shoutout
-// Catherine Liu
-// Feb 15, 2018
+
 
 // global variables
 let state;
@@ -30,8 +28,10 @@ function draw() {
   background(255);
   if (state === 1) {
     startScreen();
+    switchScreen();
   }
   if (state === 2) {
+    background(255);
     moveThing();
     displayThing();
   }
@@ -71,9 +71,10 @@ function startScreen() {
 }
 
 function switchScreen() {
-  if (mouseIsPressed) {
-    if ((mouseX > width/2 - 100 && mouseX < width/2 + 100) && (mouseY > height/2 - 50 && mouseY < height/2 + 50)) {
+  if (mouseX >= width/2 - 100 && mouseX <= width/2 + 100 && (mouseY > height/2 - 50 && mouseY < height/2 + 50)) {
+    if (mouseIsPressed) {
       state = 2;
     }
+
   }
 }
