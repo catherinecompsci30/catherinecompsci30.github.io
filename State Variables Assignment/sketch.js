@@ -38,8 +38,7 @@ function easyButton (){
 
   fill(153, 153, 255);
   if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
-    fill(128);
-    print(leftSide, rightSide, topSide, bottomSide);
+    fill(179, 102, 255);
   }
 
   noStroke();
@@ -62,7 +61,7 @@ function hardButton() {
 
   fill(153, 153, 255);
   if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
-    fill(128);
+    fill(179, 102, 255);
   }
 
   noStroke();
