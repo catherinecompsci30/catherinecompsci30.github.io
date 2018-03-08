@@ -6,26 +6,27 @@ let state;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  state = 1;
 }
 
 function draw() {
   background(128, 128, 128);
   startScreen();
+
+  if (state === 2) {
+    easyMode();
+  }
+  else if (state ===3) {
+    hardMode() ;
+  }
 }
 
 function startScreen() {
   //Easy mode button
   easyButton();
   hardButton();
+  gameInstructions();
 
-  //Hard mode button
-  // fill(153, 153, 255);
-  // rectMode(CENTER);
-  // noStroke();
-  // rect (width/2, height/2 + 80, 300, 80);
-  // fill(0);
-  // textSize(36);
-  // text("Hard Mode", width/2 - 90, height/2 + 90);
 }
 
 function easyButton (){
@@ -39,6 +40,9 @@ function easyButton (){
   fill(153, 153, 255);
   if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
     fill(179, 102, 255);
+    if (mouseIsPressed) {
+      state = 2;
+    }
   }
 
   noStroke();
@@ -51,6 +55,7 @@ function easyButton (){
   text("Easy Mode", leftSide + 0.5 * buttonWidth, topSide + 0.5 * buttonHeight);
 }
 
+
 function hardButton() {
   let buttonWidth = 300;
   let buttonHeight = 100;
@@ -62,6 +67,9 @@ function hardButton() {
   fill(153, 153, 255);
   if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
     fill(179, 102, 255);
+    if (mouseIsPressed) {
+      state = 3;
+    }
   }
 
   noStroke();
@@ -72,14 +80,32 @@ function hardButton() {
   textAlign(CENTER, CENTER);
   fill(0);
   text("Hard Mode", leftSide + 0.5 * buttonWidth, topSide + 0.5 * buttonHeight);
+}
 
+function gameInstructions() {
+  let instructions = "To Play: \n (insert instructions here)";
+
+  textStyle(BOLD);
+  textSize(30);
+  textAlign(CENTER);
+  text(instructions, width/2 , 60);
 }
 
 function easyMode() {
+  background(0);
+
+  for (let i = 400; i < 500; i += 50) {
+    for (let j = 400; j < 500; j += 50) {
+      fill (255, 0, 0);
+      rect(i, j, 50, 50);
+    }
+  }
+
 
 }
 
 function hardMode() {
+  background(0);
 
 }
 
