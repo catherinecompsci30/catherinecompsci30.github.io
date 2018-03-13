@@ -3,12 +3,13 @@
 // March 16, 2018
 
 let state;
-let blockColours = [
-  [255, 0, 0], //red
-  [0, 179, 0], //green
-  [26, 26, 255], //blue
-  [255, 255, 0] //yellow
-];
+let red = [255, 0, 0,];
+let green = [0, 179, 0,];
+let blue = [26, 26, 255,];
+let yellow = [255, 255, 0,];
+
+let blockColours = [red, green, blue, yellow,];
+
 
 
 function setup() {
@@ -136,7 +137,7 @@ function hardMode() {
 function returnToStart() {
   let buttonWidth = 100;
   let buttonHeight = 30;
-  let leftSide = 1200 - buttonWidth / 2;
+  let leftSide = width - (buttonWidth + 30);
   let topSide = 30 - buttonHeight / 2;
   let rightSide = leftSide + buttonWidth;
   let bottomSide = topSide + buttonHeight;
