@@ -3,13 +3,12 @@
 // March 16, 2018
 
 let state;
-let red = [255, 0, 0,];
-let green = [0, 179, 0,];
-let blue = [26, 26, 255,];
-let yellow = [255, 255, 0,];
+let red = [255, 0, 0, ];
+let green = [0, 179, 0, ];
+let blue = [26, 26, 255, ];
+let yellow = [255, 255, 0, ];
 
-let blockColours = [red, green, blue, yellow,];
-
+let blockColours = [red, green, blue, yellow, ];
 
 
 function setup() {
@@ -19,10 +18,12 @@ function setup() {
 }
 
 function draw() {
-  background(128, 128, 128);
-  startScreen();
+  if (state === 1) {
+    background(128, 128, 128);
+    startScreen();
+  }
 
-  if (state === 2) {
+  else if (state === 2) {
     easyMode();
     returnToStart();
   }
@@ -107,25 +108,24 @@ function easyMode() {
 
   let squareNumber = 0;
 
-  for (let i = width / 2 - 100; i < 700; i += 120) {
-    for (let j = height / 2 - 100; j < 320; j += 120) {
+  for (let i = width / 2 - 100; i < (width / 2) + 30; i += 120) {
+    for (let j = height / 2 - 100; j < (height / 2) + 30; j += 120) {
       fill(blockColours[squareNumber][0], blockColours[squareNumber][1], blockColours[squareNumber][2]);
       rect(i, j, 100, 100);
       squareNumber += 1;
 
     }
   }
-
-
 }
+
 
 function hardMode() {
   background(0);
 
   let squareNumber = 0;
 
-  for (let i = width / 2 - 100; i < 700; i += 120) {
-    for (let j = height / 2 - 100; j < 320; j += 120) {
+  for (let i = width / 2 - 100; i < (width / 2) + 30; i += 120) {
+    for (let j = height / 2 - 100; j < (width / 2) + 30; j += 120) {
       fill(blockColours[squareNumber][0], blockColours[squareNumber][1], blockColours[squareNumber][2]);
       rect(i, j, 100, 100);
       squareNumber += 1;
