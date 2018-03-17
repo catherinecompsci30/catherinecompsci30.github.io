@@ -103,9 +103,7 @@ function gameInstructions() {
   text(instructions, width / 2, 60);
 }
 
-function easyMode() {
-  background(0);
-
+function basicDesign() {
   let squareNumber = 0;
 
   for (let i = width / 2 - 100; i < (width / 2) + 30; i += 120) {
@@ -118,21 +116,21 @@ function easyMode() {
   }
 }
 
+function easyMode() {
+  background(0);
+
+  basicDesign();
+
+}
+
 
 function hardMode() {
   background(0);
 
-  let squareNumber = 0;
-
-  for (let i = width / 2 - 100; i < (width / 2) + 30; i += 120) {
-    for (let j = height / 2 - 100; j < (width / 2) + 30; j += 120) {
-      fill(blockColours[squareNumber][0], blockColours[squareNumber][1], blockColours[squareNumber][2]);
-      rect(i, j, 100, 100);
-      squareNumber += 1;
-    }
-  }
+  basicDesign();
 
 }
+
 
 function returnToStart() {
   let buttonWidth = 100;
