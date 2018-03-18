@@ -82,15 +82,6 @@ function draw() {
     }
   }
 
-      // if (squareOrder.length === 0) {
-      //   for (let i = 0; i < 8; i++ ) {
-      //     squareOrder.push(floor(random(1, 5))); //floor eliminates decimals by rounding down
-  //       }
-  //     }
-  //     squareOrderFnc(squareOrder);
-  //   }
-  // }
-
   if (userTry === true) {
     userSelection(userArray);
 

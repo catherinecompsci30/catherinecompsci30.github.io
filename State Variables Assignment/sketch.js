@@ -1,42 +1,66 @@
 // State Variables Assignment
 // Catherine Liu
-// March 16, 2018
+// March 15, 2018
+
+//Global Variables
 
 let state;
+
+//button size for the level selection buttons.
+let buttonWidth = 300;
+let buttonHeight = 100;
+
+// array of the rgb values of the four squares.
 let red = [255, 0, 0, ];
 let green = [0, 179, 0, ];
 let blue = [26, 26, 255, ];
 let yellow = [255, 255, 0, ];
+let blockColours = [red, green, blue, yellow, ];
 
+//counters used
 let arrayCounter = -1;
 let orderCounter = 0;
 
-let blockColours = [red, green, blue, yellow, ];
-
+//arrays that keep track of the computer colour choices and the user's choices.
 let squareOrder = [];
-
 let userArray = [];
 
+//displays the computer colour choices when true.
 let runOrder = false;
 
+//determines when the user is allowed to respond.
 let userTry = false;
 
+//compares the computer choice with the user's response
 let checkAnswer = false;
+let match = true;
 
+//determines if the order of flashing colours is rearranged.
 let isShuffled = false;
 
-let match = true;
+let popSound;
+
+
+
+
+function preload() {
+  popSound = loadSound("assets/pop.mp3");
+}
+
 
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   state = 1;
-
 }
 
+
+
 function draw() {
+
+  //state 1 is the start screen.
   if (state === 1) {
-    background(128, 128, 128);
+    background(204, 217, 255);
     startScreen();
 
     runOrder = false;
@@ -50,25 +74,32 @@ function draw() {
 
   }
 
+  //state 2 is the 'Easy Mode'.
   else if (state === 2) {
 
     playMode();
     returnToStart();
     if (runOrder === true) {
+      //if the order of flashing colours has not yet been shuffled, it will shuffle
+      //it and then set 'isShuffled' to be false so it doesn't keep shuffling.
       if (isShuffled === false) {
         squareOrder = [1, 2, 3, 4, ];
         squareOrder = shuffle(squareOrder);
         isShuffled = true;
       }
-      squareOrderFnc(squareOrder);
+      squareOrderFxn(squareOrder);
     }
   }
 
+  //this is the 'Hard Mode'.
   else if (state === 3) {
     playMode();
     returnToStart();
 
     if (runOrder === true) {
+      //if the order of flashing colours has not yet been shuffled, it will seperately
+      //shuffle two arrays and check that the same colour doesn't appear twice in a row,
+      //and then combine the two arrays into one.
       if (isShuffled === false) {
         let firstHalf = shuffle([1, 2, 3, 4, ]);
         let secondHalf = shuffle([1, 2, 3, 4, ]);
@@ -78,33 +109,37 @@ function draw() {
         squareOrder = concat(firstHalf, secondHalf);
         isShuffled = true;
       }
-      squareOrderFnc(squareOrder);
+      squareOrderFxn(squareOrder);
     }
   }
 
+  //records the user's response into an array with numbers 1, 2, 3, and 4 -- each
+  //corresponding to a seperate square.
   if (userTry === true) {
     userSelection(userArray);
-
   }
+
+  //compares the user's response with the original display.
   if (checkAnswer === true) {
     isUserCorrect(squareOrder, userArray);
   }
-
 }
 
 
 
 function startScreen() {
-  //Easy mode button
+  //Easy Mode button
   easyButton();
+  //Hard Mode Button
   hardButton();
   gameInstructions();
 
 }
 
+
+
+//changes to state 2 when clicked and runs the easy level of the game.
 function easyButton() {
-  let buttonWidth = 300;
-  let buttonHeight = 100;
   let leftSide = width / 2 - buttonWidth / 2;
   let topSide = height / 2 - buttonHeight / 2 - 80;
   let rightSide = leftSide + buttonWidth;
@@ -114,6 +149,7 @@ function easyButton() {
   if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
     fill(179, 102, 255);
     if (mouseIsPressed) {
+      popSound.play();
       state = 2;
     }
   }
@@ -129,9 +165,9 @@ function easyButton() {
 }
 
 
+
+//changes to state 3 when clicked and runs the hard level of the game.
 function hardButton() {
-  let buttonWidth = 300;
-  let buttonHeight = 100;
   let leftSide = width / 2 - buttonWidth / 2;
   let topSide = height / 2 - buttonHeight / 2 + 80;
   let rightSide = leftSide + buttonWidth;
@@ -141,6 +177,7 @@ function hardButton() {
   if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
     fill(179, 102, 255);
     if (mouseIsPressed) {
+      popSound.play();
       state = 3;
     }
   }
@@ -155,16 +192,30 @@ function hardButton() {
   text("Hard Mode", leftSide + 0.5 * buttonWidth, topSide + 0.5 * buttonHeight);
 }
 
+
+
+//displayed at the top of the start screen.
 function gameInstructions() {
-  let instructions = "To Play: \n Select a difficulty level and follow \n the instructions on the page. ";
+  let instructions = [""
+    ,"To Play: \n\n"
+    ,"Choose a level and press the SPACE BAR to begin. \n"
+    ,"The computer will display a random pattern of squares lighting up. \n"
+    ,"Your goal is to remember that order and click the corresponding squares afterwards."
+  ].join("");
 
   textStyle(BOLD);
-  textSize(30);
+  textSize(20);
   textAlign(CENTER);
   text(instructions, width / 2, 80);
 }
 
-function basicDesign() {
+
+
+//the layout of the screen and the squares at the beginning of both levels before
+//the user clicks the space bar to begin.
+function playMode() {
+  background(0);
+
   let squareNumber = 0;
 
   for (let i = width / 2 - 100; i < (width / 2) + 30; i += 120) {
@@ -172,65 +223,13 @@ function basicDesign() {
       fill(blockColours[squareNumber][0], blockColours[squareNumber][1], blockColours[squareNumber][2]);
       rect(i, j, 100, 100);
       squareNumber += 1;
-
     }
   }
 }
 
 
-function playMode() {
-  background(0);
 
-  basicDesign();
-
-}
-
-function keyPressed() {
-  if (key === " ") {
-    runOrder = true;
-    return false;
-  }
-}
-
-
-function squareOrderFnc (array) {
-
-  if (orderCounter % 60 === 0) {
-    arrayCounter += 1;
-  }
-
-
-  if (array[arrayCounter] === 1) {
-    //red tint
-    fill(255, 179, 179);
-    rect(width/2 - 100, height/2 - 100, 100, 100);
-  }
-  else if (array[arrayCounter] === 2) {
-    //green tint
-    fill(179, 255, 179);
-    rect(width/2 - 100, height/2 + 20, 100, 100);
-  }
-  else if (array[arrayCounter] === 3) {
-    //blue tint
-    fill(179, 179, 255);
-    rect(width/2 + 20, height/2 - 100, 100, 100);
-  }
-  else if (array[arrayCounter] === 4) {
-    //yellow tint
-    fill(255, 255, 204);
-    rect(width/2 + 20, height/2 + 20, 100, 100);
-  }
-  if (arrayCounter < array.length) {
-    orderCounter += 1;
-  }
-
-  else {
-    userTry = true;
-  }
-}
-
-
-
+//a button which returns to the start screen when clicked.
 function returnToStart() {
   let buttonWidth = 100;
   let buttonHeight = 30;
@@ -243,6 +242,7 @@ function returnToStart() {
   if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
     fill(223, 159, 191);
     if (mouseIsPressed) {
+      popSound.play();
       state = 1;
       orderCounter = 0;
       arrayCounter = -1;
@@ -261,12 +261,70 @@ function returnToStart() {
 }
 
 
+//displays the computer selected order of colours when the space bar is pressed.
+function keyPressed() {
+  if (key === " ") {
+    runOrder = true;
+    return false;
+  }
+}
+
+
+
+//takes in the array generated by the computer to determine the order of colours,
+//and then displays the corresponding squares for one second each. Once it has
+//cycled through all of the values, it allows the user to respond.
+function squareOrderFxn (array) {
+
+  if (orderCounter % 60 === 0) {
+    arrayCounter += 1;
+  }
+
+  if (array[arrayCounter] === 1) {
+    //red tint
+    fill(255, 179, 179);
+    rect(width/2 - 100, height/2 - 100, 100, 100);
+  }
+
+  else if (array[arrayCounter] === 2) {
+    //green tint
+    fill(179, 255, 179);
+    rect(width/2 - 100, height/2 + 20, 100, 100);
+  }
+
+  else if (array[arrayCounter] === 3) {
+    //blue tint
+    fill(179, 179, 255);
+    rect(width/2 + 20, height/2 - 100, 100, 100);
+  }
+
+  else if (array[arrayCounter] === 4) {
+    //yellow tint
+    fill(255, 255, 204);
+    rect(width/2 + 20, height/2 + 20, 100, 100);
+  }
+
+  if (arrayCounter < array.length) {
+    orderCounter += 1;
+  }
+
+  else {
+    userTry = true;
+  }
+}
+
+
+
+//tints the squares when the mouse hovers overtop and keeps track of the squares
+//the user has clicked. If a square is clicked, it sends a value between 1 and 4
+//to a new array depending on the square.
 function userSelection (userArray) {
   if (mouseX >= (width/2 - 100) && mouseX <= width/2) {
     if (mouseY >= (height/2 - 100) && mouseY <= height/2) {
-      fill(255, 179, 179); //red
+      fill(255, 179, 179); //red tint
       rect(width/2 - 100, height/2 - 100, 100, 100);
       if (mouseIsPressed) {
+        popSound.play();
         userArray.push(1);
         mouseIsPressed = false;
       }
@@ -275,41 +333,53 @@ function userSelection (userArray) {
 
   if (mouseX >= (width/2 - 100) && mouseX <= width/2) {
     if (mouseY >= (height/2 + 20) && mouseY <= height/2 + 120) {
-      fill(179, 255, 179); //green
+      fill(179, 255, 179); //green tint
       rect(width/2 - 100, height/2 + 20, 100, 100);
       if (mouseIsPressed) {
+        popSound.play();
         userArray.push(2);
         mouseIsPressed = false;
       }
     }
   }
+
   if (mouseX >= (width/2 + 20) && mouseX <= width/2 + 120) {
     if (mouseY >= (height/2 - 100) && mouseY <= height/2) {
-      fill(179, 179, 255); //blue
+      fill(179, 179, 255); //blue tint
       rect(width/2 + 20, height/2 - 100, 100, 100);
       if (mouseIsPressed) {
+        popSound.play();
         userArray.push(3);
         mouseIsPressed = false;
       }
     }
   }
+
   if (mouseX >= (width/2 + 20) && mouseX <= width/2 + 120) {
     if (mouseY >= (height/2 + 20) && mouseY <= height/2 + 120) {
-      fill(255, 255, 204); //yellow
+      fill(255, 255, 204); //yellow tint
       rect(width/2 + 20, height/2 + 20, 100, 100);
       if (mouseIsPressed) {
+        popSound.play();
         userArray.push(4);
         mouseIsPressed = false;
       }
     }
   }
 
+  //once the array containing the user's choices becomes the same length as the
+  //original array, the computer will check to see if the two arrays match.
   if (userArray.length === squareOrder.length) {
     checkAnswer = true;
     userTry = false;
   }
 }
 
+
+
+//determines whether the user is correct by comparing each value of the user's array
+//with the original. If they are the same, the screen displays "Correct!", and if
+//they are not, the screen displays "Nope!".
 function isUserCorrect (computerArray, userArray) {
   for (let i = 0; i < computerArray.length; i++) {
     if (!(computerArray[i] === userArray[i])) {
@@ -321,12 +391,10 @@ function isUserCorrect (computerArray, userArray) {
   fill(255);
   textAlign(CENTER, CENTER);
 
-
-
   if (match) {
     text("Correct!", width/2 + 10, height/5);
   }
   else {
-    text("You're Bad!", width/2 + 10, height/5);
+    text("Nope!", width/2 + 10, height/5);
   }
 }
