@@ -13,12 +13,16 @@ let orderCounter = 0;
 
 let blockColours = [red, green, blue, yellow, ];
 
-let squareOrder = [1, 2, 3, 4, ];
+let squareOrder = [];
 let userArray = [];
 
 let runOrder = false;
 
 let userTry = false;
+
+let checkAnswer = false;
+
+let match = true;
 
 
 function setup() {
@@ -31,25 +35,56 @@ function draw() {
   if (state === 1) {
     background(128, 128, 128);
     startScreen();
+
     runOrder = false;
+    userTry = false;
+    checkAnswer = false;
+    match = true;
+
+    userArray = [];
+    squareOrder = [];
+
   }
 
   else if (state === 2) {
-    easyMode();
+
+    playMode();
+    returnToStart();
     if (runOrder === true) {
+      if (squareOrder.length === 0) {
+        for (let i = 0; i < 4; i++ ) {
+          squareOrder.push(floor(random(1, 5)));
+        }
+      }
       squareOrderFnc(squareOrder);
     }
-    if (userTry === true) {
-      isUserCorrect();
-    }
-    returnToStart();
   }
 
   else if (state === 3) {
-    hardMode();
+    playMode();
     returnToStart();
+
+    if (runOrder === true) {
+      if (squareOrder.length === 0) {
+        for (let i = 0; i < 8; i++ ) {
+          squareOrder.push(floor(random(1, 5)));
+        }
+      }
+      squareOrderFnc(squareOrder);
+    }
   }
+
+  if (userTry === true) {
+    userSelection(userArray);
+
+  }
+  if (checkAnswer === true) {
+    isUserCorrect(squareOrder, userArray);
+  }
+
 }
+
+
 
 function startScreen() {
   //Easy mode button
@@ -140,7 +175,7 @@ function displayCountdown() {
 
 
 
-function easyMode() {
+function playMode() {
   background(0);
 
   basicDesign();
@@ -153,14 +188,6 @@ function keyPressed() {
     return false;
   }
 }
-
-function hardMode() {
-  background(0);
-
-  basicDesign();
-
-}
-
 
 
 function squareOrderFnc (array) {
@@ -230,6 +257,73 @@ function returnToStart() {
   text("Return", leftSide + 0.5 * buttonWidth, topSide + 0.5 * buttonHeight);
 }
 
-function isUserCorrect () {
-  if ()
+
+function userSelection (userArray) {
+  if (mouseX >= (width/2 - 100) && mouseX <= width/2) {
+    if (mouseY >= (height/2 - 100) && mouseY <= height/2) {
+      fill(255, 102, 102); //red
+      rect(width/2 - 100, height/2 - 100, 100, 100);
+      if (mouseIsPressed) {
+        userArray.push(1);
+        mouseIsPressed = false;
+      }
+    }
+  }
+
+  if (mouseX >= (width/2 - 100) && mouseX <= width/2) {
+    if (mouseY >= (height/2 + 20) && mouseY <= height/2 + 120) {
+      fill(26, 255, 102); //green
+      rect(width/2 - 100, height/2 + 20, 100, 100);
+      if (mouseIsPressed) {
+        userArray.push(2);
+        mouseIsPressed = false;
+      }
+    }
+  }
+  if (mouseX >= (width/2 + 20) && mouseX <= width/2 + 120) {
+    if (mouseY >= (height/2 - 100) && mouseY <= height/2) {
+      fill(128, 128, 255); //blue
+      rect(width/2 + 20, height/2 - 100, 100, 100);
+      if (mouseIsPressed) {
+        userArray.push(3);
+        mouseIsPressed = false;
+      }
+    }
+  }
+  if (mouseX >= (width/2 + 20) && mouseX <= width/2 + 120) {
+    if (mouseY >= (height/2 + 20) && mouseY <= height/2 + 120) {
+      fill(255, 255, 153); //yellow
+      rect(width/2 + 20, height/2 + 20, 100, 100);
+      if (mouseIsPressed) {
+        userArray.push(4);
+        mouseIsPressed = false;
+      }
+    }
+  }
+
+  if (userArray.length === squareOrder.length) {
+    checkAnswer = true;
+    userTry = false;
+  }
+}
+
+function isUserCorrect (computerArray, userArray) {
+  for (let i = 0; i < computerArray.length; i++) {
+    if (!(computerArray[i] === userArray[i])) {
+      match = false;
+    }
+  }
+
+  textSize(30);
+  fill(255);
+  textAlign(CENTER, CENTER);
+
+
+
+  if (match) {
+    text("Correct!", width/2 + 10, height/5);
+  }
+  else {
+    text("You're Bad!", width/2 + 10, height/5);
+  }
 }
