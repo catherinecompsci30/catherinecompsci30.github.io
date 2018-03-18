@@ -1,34 +1,346 @@
-// p5js template project - replace with project title
-// Dan Schellenberg - replace with your name
-// Feb 2, 2018 - replace with the date
+// State Variables Assignment
+// Catherine Liu
+// March 16, 2018
 
-// global variables
-let gear;
+let state;
+let red = [255, 0, 0, ];
+let green = [0, 179, 0, ];
+let blue = [26, 26, 255, ];
+let yellow = [255, 255, 0, ];
 
-// the preload function guarentees that the code inside the function is
-// executed before the rest of the program runs -- helpful for things
-// like loading images (since JS is asynchronous)
-function preload() {
-  gear = loadImage("images/gear.png");
-}
+let arrayCounter = -1;
+let orderCounter = 0;
 
-// the setup function will only run once (before the draw loop begins)
-// this is where you want to set up the environment (size of canvas, etc)
+let blockColours = [red, green, blue, yellow, ];
+
+let squareOrder = [1, 2, 3, 4, ];
+
+let userArray = [];
+
+let runOrder = false;
+
+let userTry = false;
+
+let checkAnswer = false;
+
+let isShuffled = false;
+
+let match = true;
+
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  state = 1;
+
 }
 
 function draw() {
-  background(255);
+  if (state === 1) {
+    background(128, 128, 128);
+    startScreen();
 
-  image(gear, 0, 0);
+    runOrder = false;
+    userTry = false;
+    checkAnswer = false;
+    match = true;
+    isShuffled = false;
 
-  stroke(0);
-  line(0, 0, 200, 200);
+    userArray = [];
+    squareOrder = [1,2,3,4, ];
 
-  fill(0, 255, 0, 100);
+  }
+
+  else if (state === 2) {
+
+    playMode();
+    returnToStart();
+    if (runOrder === true) {
+      if (isShuffled === false) {
+        squareOrder = shuffleArray(squareOrder);
+        isShuffled = true;
+      }
+      squareOrderFnc(squareOrder);
+    }
+  }
+
+  else if (state === 3) {
+    squareOrder = [1, 2, 3, 4, 1, 2, 3, 4, ];
+    playMode();
+    returnToStart();
+
+    if (runOrder === true) {
+      if (squareOrder.length === 0) {
+        for (let i = 0; i < 8; i++ ) {
+          squareOrder.push(floor(random(1, 5))); //floor eliminates decimals by rounding down
+        }
+      }
+      squareOrderFnc(squareOrder);
+    }
+  }
+
+  if (userTry === true) {
+    userSelection(userArray);
+
+  }
+  if (checkAnswer === true) {
+    isUserCorrect(squareOrder, userArray);
+  }
+
+}
+
+
+
+function startScreen() {
+  //Easy mode button
+  easyButton();
+  hardButton();
+  gameInstructions();
+
+}
+
+function easyButton() {
+  let buttonWidth = 300;
+  let buttonHeight = 100;
+  let leftSide = width / 2 - buttonWidth / 2;
+  let topSide = height / 2 - buttonHeight / 2 - 80;
+  let rightSide = leftSide + buttonWidth;
+  let bottomSide = topSide + buttonHeight;
+
+  fill(153, 153, 255);
+  if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
+    fill(179, 102, 255);
+    if (mouseIsPressed) {
+      state = 2;
+    }
+  }
+
   noStroke();
+  rect(leftSide, topSide, buttonWidth, buttonHeight);
 
-  rect(mouseX, mouseY, 100, 300);
-  ellipse(400, 150, 300, 200);
+  textStyle(BOLD);
+  textSize(36);
+  textAlign(CENTER, CENTER);
+  fill(0);
+  text("Easy Mode", leftSide + 0.5 * buttonWidth, topSide + 0.5 * buttonHeight);
+}
+
+
+function hardButton() {
+  let buttonWidth = 300;
+  let buttonHeight = 100;
+  let leftSide = width / 2 - buttonWidth / 2;
+  let topSide = height / 2 - buttonHeight / 2 + 80;
+  let rightSide = leftSide + buttonWidth;
+  let bottomSide = topSide + buttonHeight;
+
+  fill(153, 153, 255);
+  if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
+    fill(179, 102, 255);
+    if (mouseIsPressed) {
+      state = 3;
+    }
+  }
+
+  noStroke();
+  rect(leftSide, topSide, buttonWidth, buttonHeight);
+
+  textStyle(BOLD);
+  textSize(36);
+  textAlign(CENTER, CENTER);
+  fill(0);
+  text("Hard Mode", leftSide + 0.5 * buttonWidth, topSide + 0.5 * buttonHeight);
+}
+
+function gameInstructions() {
+  let instructions = "To Play: \n Select a difficulty level and follow \n the instructions on the page. ";
+
+  textStyle(BOLD);
+  textSize(30);
+  textAlign(CENTER);
+  text(instructions, width / 2, 80);
+}
+
+function basicDesign() {
+  let squareNumber = 0;
+
+  for (let i = width / 2 - 100; i < (width / 2) + 30; i += 120) {
+    for (let j = height / 2 - 100; j < (height / 2) + 30; j += 120) {
+      fill(blockColours[squareNumber][0], blockColours[squareNumber][1], blockColours[squareNumber][2]);
+      rect(i, j, 100, 100);
+      squareNumber += 1;
+
+    }
+  }
+}
+
+
+function playMode() {
+  background(0);
+
+  basicDesign();
+
+}
+
+function keyPressed() {
+  if (key === " ") {
+    runOrder = true;
+    return false;
+  }
+}
+
+
+function squareOrderFnc (array) {
+
+  if (orderCounter % 60 === 0) {
+    arrayCounter += 1;
+  }
+
+
+  if (array[arrayCounter] === 1) {
+    //red tint
+    fill(255, 179, 179);
+    rect(width/2 - 100, height/2 - 100, 100, 100);
+  }
+  else if (array[arrayCounter] === 2) {
+    //green tint
+    fill(179, 255, 179);
+    rect(width/2 - 100, height/2 + 20, 100, 100);
+  }
+  else if (array[arrayCounter] === 3) {
+    //blue tint
+    fill(179, 179, 255);
+    rect(width/2 + 20, height/2 - 100, 100, 100);
+  }
+  else if (array[arrayCounter] === 4) {
+    //yellow tint
+    fill(255, 255, 204);
+    rect(width/2 + 20, height/2 + 20, 100, 100);
+  }
+  if (arrayCounter < array.length) {
+    orderCounter += 1;
+  }
+
+  else {
+    userTry = true;
+  }
+}
+
+function shuffleArray(array) {
+  let currentIndex = array.length, temporaryValue, randomIndex;
+
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+
+  }
+  return array;
+}
+
+
+function returnToStart() {
+  let buttonWidth = 100;
+  let buttonHeight = 30;
+  let leftSide = width - (buttonWidth + 30);
+  let topSide = 30 - buttonHeight / 2;
+  let rightSide = leftSide + buttonWidth;
+  let bottomSide = topSide + buttonHeight;
+
+  fill(204, 102, 153);
+  if (mouseX >= leftSide && mouseX <= rightSide && mouseY >= topSide && mouseY <= bottomSide) {
+    fill(223, 159, 191);
+    if (mouseIsPressed) {
+      state = 1;
+      orderCounter = 0;
+      arrayCounter = -1;
+      runOrder = false;
+    }
+  }
+
+  noStroke();
+  rect(leftSide, topSide, buttonWidth, buttonHeight);
+
+  textStyle(BOLD);
+  textSize(16);
+  textAlign(CENTER, CENTER);
+  fill(0);
+  text("Return", leftSide + 0.5 * buttonWidth, topSide + 0.5 * buttonHeight);
+}
+
+
+function userSelection (userArray) {
+  if (mouseX >= (width/2 - 100) && mouseX <= width/2) {
+    if (mouseY >= (height/2 - 100) && mouseY <= height/2) {
+      fill(255, 179, 179); //red
+      rect(width/2 - 100, height/2 - 100, 100, 100);
+      if (mouseIsPressed) {
+        userArray.push(1);
+        mouseIsPressed = false;
+      }
+    }
+  }
+
+  if (mouseX >= (width/2 - 100) && mouseX <= width/2) {
+    if (mouseY >= (height/2 + 20) && mouseY <= height/2 + 120) {
+      fill(179, 255, 179); //green
+      rect(width/2 - 100, height/2 + 20, 100, 100);
+      if (mouseIsPressed) {
+        userArray.push(2);
+        mouseIsPressed = false;
+      }
+    }
+  }
+  if (mouseX >= (width/2 + 20) && mouseX <= width/2 + 120) {
+    if (mouseY >= (height/2 - 100) && mouseY <= height/2) {
+      fill(179, 179, 255); //blue
+      rect(width/2 + 20, height/2 - 100, 100, 100);
+      if (mouseIsPressed) {
+        userArray.push(3);
+        mouseIsPressed = false;
+      }
+    }
+  }
+  if (mouseX >= (width/2 + 20) && mouseX <= width/2 + 120) {
+    if (mouseY >= (height/2 + 20) && mouseY <= height/2 + 120) {
+      fill(255, 255, 204); //yellow
+      rect(width/2 + 20, height/2 + 20, 100, 100);
+      if (mouseIsPressed) {
+        userArray.push(4);
+        mouseIsPressed = false;
+      }
+    }
+  }
+
+  if (userArray.length === squareOrder.length) {
+    checkAnswer = true;
+    userTry = false;
+  }
+}
+
+function isUserCorrect (computerArray, userArray) {
+  for (let i = 0; i < computerArray.length; i++) {
+    if (!(computerArray[i] === userArray[i])) {
+      match = false;
+    }
+  }
+
+  textSize(30);
+  fill(255);
+  textAlign(CENTER, CENTER);
+
+
+
+  if (match) {
+    text("Correct!", width/2 + 10, height/5);
+  }
+  else {
+    text("You're Bad!", width/2 + 10, height/5);
+  }
 }
