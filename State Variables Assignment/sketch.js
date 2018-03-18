@@ -2,6 +2,24 @@
 // Catherine Liu
 // March 15, 2018
 
+//I used state variables to switch between the three different 'modes' of the game -- start, easy, and hard.
+//I also used many booleans to help keep track of the state of the game at particular instances. For example,
+//the 'userTry' variable turns true when the computer has finished displaying the pattern, indicating that
+//it should now be prepared to keep track of the input from the user.
+//
+//I did not have enough time to figure out a way to 'loop' the game, so in this version, you have to click
+//the 'Return' button and go back to the start screen to play again.
+//
+//Extra for Experts:
+//  - Used complex array structures such as nested arrays and the shuffle() function to rearrange values.
+//  - Made functions so that the computer checks if the user's response is correct (kind of AI).
+//  - The pattern displayed by squares is different each time a mode is selected.
+//
+//***I helped Will with his project by explaining to him the structure I used for my nested arrays.
+//***Csaba helped me figure out how to not have the same colour flash twice in a row and explained
+//   some of the logic begind using booleans to check when certain functions should run.
+
+
 //Global Variables
 
 let state;
@@ -200,7 +218,7 @@ function gameInstructions() {
     ,"To Play: \n\n"
     ,"Choose a level and press the SPACE BAR to begin. \n"
     ,"The computer will display a random pattern of squares lighting up. \n"
-    ,"Your goal is to remember that order and click the corresponding squares afterwards."
+    ,"Your goal is to remember the order and click the corresponding squares afterwards."
   ].join("");
 
   textStyle(BOLD);
