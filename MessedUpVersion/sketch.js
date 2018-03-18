@@ -13,7 +13,7 @@ let orderCounter = 0;
 
 let blockColours = [red, green, blue, yellow, ];
 
-let squareOrder = [1, 2, 3, 4, ];
+let squareOrder = [];
 
 let userArray = [];
 
@@ -46,7 +46,7 @@ function draw() {
     isShuffled = false;
 
     userArray = [];
-    squareOrder = [1,2,3,4, ];
+    squareOrder = [];
 
   }
 
@@ -56,7 +56,8 @@ function draw() {
     returnToStart();
     if (runOrder === true) {
       if (isShuffled === false) {
-        squareOrder = shuffleArray(squareOrder);
+        squareOrder = [1, 2, 3, 4, ];
+        squareOrder = shuffle(squareOrder);
         isShuffled = true;
       }
       squareOrderFnc(squareOrder);
@@ -64,19 +65,31 @@ function draw() {
   }
 
   else if (state === 3) {
-    squareOrder = [1, 2, 3, 4, 1, 2, 3, 4, ];
     playMode();
     returnToStart();
 
     if (runOrder === true) {
-      if (squareOrder.length === 0) {
-        for (let i = 0; i < 8; i++ ) {
-          squareOrder.push(floor(random(1, 5))); //floor eliminates decimals by rounding down
+      if (isShuffled === false) {
+        let firstHalf = shuffle([1, 2, 3, 4, ]);
+        let secondHalf = shuffle([1, 2, 3, 4, ]);
+        while (firstHalf[3] === secondHalf[0]) {
+          firstHalf = shuffle([1, 2, 3, 4, ]);
         }
+        squareOrder = concat(firstHalf, secondHalf);
+        isShuffled = true;
       }
       squareOrderFnc(squareOrder);
     }
   }
+
+      // if (squareOrder.length === 0) {
+      //   for (let i = 0; i < 8; i++ ) {
+      //     squareOrder.push(floor(random(1, 5))); //floor eliminates decimals by rounding down
+  //       }
+  //     }
+  //     squareOrderFnc(squareOrder);
+  //   }
+  // }
 
   if (userTry === true) {
     userSelection(userArray);
@@ -225,24 +238,6 @@ function squareOrderFnc (array) {
   }
 }
 
-function shuffleArray(array) {
-  let currentIndex = array.length, temporaryValue, randomIndex;
-
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-
-  }
-  return array;
-}
 
 
 function returnToStart() {

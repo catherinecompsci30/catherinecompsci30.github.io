@@ -14,6 +14,7 @@ let orderCounter = 0;
 let blockColours = [red, green, blue, yellow, ];
 
 let squareOrder = [];
+
 let userArray = [];
 
 let runOrder = false;
@@ -21,6 +22,8 @@ let runOrder = false;
 let userTry = false;
 
 let checkAnswer = false;
+
+let isShuffled = false;
 
 let match = true;
 
@@ -40,6 +43,7 @@ function draw() {
     userTry = false;
     checkAnswer = false;
     match = true;
+    isShuffled = false;
 
     userArray = [];
     squareOrder = [];
@@ -51,10 +55,10 @@ function draw() {
     playMode();
     returnToStart();
     if (runOrder === true) {
-      if (squareOrder.length === 0) {
-        for (let i = 0; i < 4; i++ ) {
-          squareOrder.push(floor(random(1, 5)));
-        }
+      if (isShuffled === false) {
+        squareOrder = [1, 2, 3, 4, ];
+        squareOrder = shuffle(squareOrder);
+        isShuffled = true;
       }
       squareOrderFnc(squareOrder);
     }
@@ -65,10 +69,14 @@ function draw() {
     returnToStart();
 
     if (runOrder === true) {
-      if (squareOrder.length === 0) {
-        for (let i = 0; i < 8; i++ ) {
-          squareOrder.push(floor(random(1, 5)));
+      if (isShuffled === false) {
+        let firstHalf = shuffle([1, 2, 3, 4, ]);
+        let secondHalf = shuffle([1, 2, 3, 4, ]);
+        while (firstHalf[3] === secondHalf[0]) {
+          firstHalf = shuffle([1, 2, 3, 4, ]);
         }
+        squareOrder = concat(firstHalf, secondHalf);
+        isShuffled = true;
       }
       squareOrderFnc(squareOrder);
     }
@@ -148,12 +156,12 @@ function hardButton() {
 }
 
 function gameInstructions() {
-  let instructions = "To Play: \n (insert instructions here)";
+  let instructions = "To Play: \n Select a difficulty level and follow \n the instructions on the page. ";
 
   textStyle(BOLD);
   textSize(30);
   textAlign(CENTER);
-  text(instructions, width / 2, 60);
+  text(instructions, width / 2, 80);
 }
 
 function basicDesign() {
@@ -168,11 +176,6 @@ function basicDesign() {
     }
   }
 }
-
-function displayCountdown() {
-
-}
-
 
 
 function playMode() {
@@ -199,22 +202,22 @@ function squareOrderFnc (array) {
 
   if (array[arrayCounter] === 1) {
     //red tint
-    fill(255, 102, 102);
+    fill(255, 179, 179);
     rect(width/2 - 100, height/2 - 100, 100, 100);
   }
   else if (array[arrayCounter] === 2) {
     //green tint
-    fill(26, 255, 102);
+    fill(179, 255, 179);
     rect(width/2 - 100, height/2 + 20, 100, 100);
   }
   else if (array[arrayCounter] === 3) {
     //blue tint
-    fill(128, 128, 255);
+    fill(179, 179, 255);
     rect(width/2 + 20, height/2 - 100, 100, 100);
   }
   else if (array[arrayCounter] === 4) {
     //yellow tint
-    fill(255, 255, 153);
+    fill(255, 255, 204);
     rect(width/2 + 20, height/2 + 20, 100, 100);
   }
   if (arrayCounter < array.length) {
@@ -261,7 +264,7 @@ function returnToStart() {
 function userSelection (userArray) {
   if (mouseX >= (width/2 - 100) && mouseX <= width/2) {
     if (mouseY >= (height/2 - 100) && mouseY <= height/2) {
-      fill(255, 102, 102); //red
+      fill(255, 179, 179); //red
       rect(width/2 - 100, height/2 - 100, 100, 100);
       if (mouseIsPressed) {
         userArray.push(1);
@@ -272,7 +275,7 @@ function userSelection (userArray) {
 
   if (mouseX >= (width/2 - 100) && mouseX <= width/2) {
     if (mouseY >= (height/2 + 20) && mouseY <= height/2 + 120) {
-      fill(26, 255, 102); //green
+      fill(179, 255, 179); //green
       rect(width/2 - 100, height/2 + 20, 100, 100);
       if (mouseIsPressed) {
         userArray.push(2);
@@ -282,7 +285,7 @@ function userSelection (userArray) {
   }
   if (mouseX >= (width/2 + 20) && mouseX <= width/2 + 120) {
     if (mouseY >= (height/2 - 100) && mouseY <= height/2) {
-      fill(128, 128, 255); //blue
+      fill(179, 179, 255); //blue
       rect(width/2 + 20, height/2 - 100, 100, 100);
       if (mouseIsPressed) {
         userArray.push(3);
@@ -292,7 +295,7 @@ function userSelection (userArray) {
   }
   if (mouseX >= (width/2 + 20) && mouseX <= width/2 + 120) {
     if (mouseY >= (height/2 + 20) && mouseY <= height/2 + 120) {
-      fill(255, 255, 153); //yellow
+      fill(255, 255, 204); //yellow
       rect(width/2 + 20, height/2 + 20, 100, 100);
       if (mouseIsPressed) {
         userArray.push(4);
