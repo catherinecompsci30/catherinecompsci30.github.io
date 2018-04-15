@@ -19,6 +19,8 @@ let guess = [];
 
 let timeLeft;
 
+let counter;
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -26,7 +28,9 @@ function setup() {
 
   grid = elementLocations();
 
-  timeLeft = 5;
+  timeLeft = 60;
+
+  counter = 0;
 
   state = 1;
 }
@@ -40,10 +44,12 @@ function draw() {
 
     userGuess();
     countdownTimer();
+    if (counter === 8) {
+      state = 2;
+    }
   }
   else if (state === 2) {
     resetGame();
-
   }
 }
 
@@ -80,7 +86,7 @@ function gameInstructions() {
   textSize(90);
   textAlign(CENTER);
   fill(63, 51, 255);
-  text("Memory Match", (width / 2) + 200, 100);
+  text("Memory Match", (width / 2 + 200), 100);
 
   let instructions = [""
     ,"Click on a box to reveal a chemical element. \n"
@@ -91,7 +97,7 @@ function gameInstructions() {
 
   textSize(28);
   fill(0, 102, 153);
-  text(instructions, (width / 2) + 200, 180);
+  text(instructions, (width / 2 + 200), 180);
 }
 
 
@@ -197,8 +203,12 @@ function compareUserGuess() {
 function keyTyped() {
   if (state === 1) {
     if (key === " ") {
+      if (compareUserGuess()) {
+        counter += 1;
+      }
       guess = [];
       guessesMade = 0;
+
 
       for (let x=0; x<cols; x++) {
         for (let y=0; y<rows; y++) {
@@ -209,8 +219,7 @@ function keyTyped() {
   }
   else if (state === 2) {
     if (key === " ") {
-      guess = [];
-      guessesMade = 0;
+      counter = 0;
       state = 1;
     }
   }
@@ -233,35 +242,10 @@ function countdownTimer() {
     state = 2;
   }
 }
-//   startTime = 3;
-//   timePassed = Math.round(floor(millis() / 1000));
-//   timeLeft = startTime - timePassed;
-//
-//   if (state === 1) {
-//     fill(0);
-//     for (let seconds = startTime; seconds > 0; seconds--) {
-//       textSize(20);
-//       textAlign(CENTER);
-//       text('Time Remaining: ' + timeLeft + ' seconds', width / 2 + 200 , 380);
-//     }
-//     if (timeLeft === 0) {
-//       state = 2;
-//     }
-//   }
-// }
 
 
 function resetGame() {
-  background(0);
-  textStyle(BOLD);
-  textSize(200);
-  textAlign(CENTER);
-  fill(255, 0, 0);
-  text("GAME OVER", width/2, height/2);
-
-  textSize(30);
-  text("Press SPACE BAR to restart.", width/2, height/2 + 100);
-
+  allElements = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
   guess = [];
   guessesMade = 0;
 
@@ -271,7 +255,31 @@ function resetGame() {
     }
   }
 
-  elementLocations();
+  grid = elementLocations();
 
-  timeLeft = 5;
+  timeLeft = 60;
+
+  if (counter === 8) {
+    background(0);
+    textStyle(BOLD);
+    textSize(200);
+    textAlign(CENTER);
+    fill(0, 255, 0);
+    text("YOU WIN!", width/2, height/2);
+
+    textSize(30);
+    text("Press SPACE BAR to restart.", width/2, height/2 + 100);
+
+  }
+  else {
+    background(0);
+    textStyle(BOLD);
+    textSize(200);
+    textAlign(CENTER);
+    fill(255, 0, 0);
+    text("GAME OVER", width/2, height/2);
+
+    textSize(30);
+    text("Press SPACE BAR to restart.", width/2, height/2 + 100);
+  }
 }
