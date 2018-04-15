@@ -1,19 +1,36 @@
-// Memory
+// Memory Match
 // Catherine Liu
 // April 16, 2018
 
-//Memory game using elements from the periodic table
+//Memory game using elements from the periodic table. The objective is to find all pairs
+//before the time runs out. After clicking two boxes, press the SPACE BAR to make a new guess.
+//
+//Some funky things I didn't get time to foolproof:
+// - Currently, if you click the same box twice, it will tell you that you have found a match --
+//   so please click different boxes when making a guess.
+// - Similarily, once a match has been found, the boxes turn green, but technically you can
+//   still click on those boxes and it will tell you that you have found a match -- so also
+//   please only click blue boxes.
+//
+//Extra for Experts:
+// - Made a countdown timer and created different scenarios depending on whether the user found
+//   all matches within the allotted time or whether they ran out of time.
+// - Used state variables within arrays to keep track of which box has been clicked and
+//   if it was time to respond to the user -- i.e. "It's a match!"
 
 
+//Global variables
 let state;
 let rows = 4;
 let cols = 4;
 let grid;
 let cellSize;
-let makeGuess = true;
 
+//Array used in later functions -- each number corresponds to an element
 let allElements = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
 
+//Variables used to keep track of the user's 'moves'
+let makeGuess = true;
 let guessesMade = 0;
 let guess = [];
 
@@ -22,12 +39,15 @@ let timeLeft;
 let counter;
 
 
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   cellSize = (height - 200) / rows;
 
+  //sets up the grid
   grid = elementLocations();
 
+  //user has 60 seconds to find all matches
   timeLeft = 60;
 
   counter = 0;
@@ -35,25 +55,54 @@ function setup() {
   state = 1;
 }
 
+
+
 function draw() {
+  //State one is when the game is still running
   if (state === 1) {
     background(255);
 
     displayGrid();
     gameInstructions();
-
     userGuess();
     countdownTimer();
     if (counter === 8) {
       state = 2;
     }
   }
+  //State two is if the user has found all the matches OR the time runs out
   else if (state === 2) {
     resetGame();
   }
 }
 
 
+
+//Determines where each element will be at the start of each game. Numbers
+//are randomly grabbed from the allElements array and packaged in groups of
+//four into the transferArray, which pushes itself to newShuffle.
+function elementLocations() {
+  let choice;
+  let transferArray = [];
+  let newShuffle = [];
+
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      choice = floor(random(allElements.length - 1));
+      transferArray.push([allElements[choice], 0, 0]);
+      allElements.splice(choice, 1);
+    }
+    newShuffle.push(transferArray);
+    transferArray = [];
+  }
+  return newShuffle;
+}
+
+
+
+//Uses the information returned by elementLocations() to assign each element
+//a position on the grid. This prepares the game so that when the user clicks
+//a box, the corresponding text will show up -- i.e. 'Cl'.
 function displayGrid() {
   for (let x = 0; x < rows; x++) {
     for (let y = 0; y < cols; y++) {
@@ -80,6 +129,8 @@ function displayGrid() {
 }
 
 
+
+//Displays the game title and the instructions.
 function gameInstructions() {
 
   textStyle(BOLD);
@@ -101,24 +152,9 @@ function gameInstructions() {
 }
 
 
-//sets up where each element will be at the start of the game
-function elementLocations() {
-  let choice;
-  let transferArray = [];
-  let newShuffle = [];
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-      choice = floor(random(allElements.length - 1));
-      transferArray.push([allElements[choice], 0, 0]);
-      allElements.splice(choice, 1);
-    }
-    newShuffle.push(transferArray);
-    transferArray = [];
-  }
-  return newShuffle;
-}
 
-
+//Determines which chemical element corresponds to which number, and sends a
+//string of the element abbreviation to displayGrid().
 function displayElement(element) {
   let newString = "";
 
@@ -158,6 +194,10 @@ function displayElement(element) {
 }
 
 
+
+//Keeps track of which boxes the user has clicked. If the user has clicked
+//two boxes consecutively, it calls the compareUserGuess() function to check
+//whether the elements in the two boxes match.
 function userGuess() {
   if (makeGuess && guessesMade < 2) {
     let xPos = floor(mouseX / cellSize);
@@ -177,6 +217,7 @@ function userGuess() {
   if (guessesMade === 2) {
     compareUserGuess();
     if (compareUserGuess()) {
+      //changes the states of the boxes clicked
       grid[guess[0][1]][guess[0][2]][2] = 1;
       grid[guess[1][1]][guess[1][2]][2] = 1;
     }
@@ -185,21 +226,27 @@ function userGuess() {
 }
 
 
+
+//Checks to see if the elements of the boxes clicked are the same and displays
+//a message on the screen.
 function compareUserGuess() {
   textSize(56);
   if (guess[0][0] === guess[1][0]) {
     fill(0, 255, 0);
-    text("It's a match!", (cellSize * rows) / 2, (height / 5) * 4);
+    text("It's a match!", (cellSize * rows) / 2, height - 100);
     return true;
   }
   else {
     fill(255, 0, 0);
-    text("Nope!", (cellSize * rows) / 2, (height / 5) * 4);
+    text("Nope!", (cellSize * rows) / 2, height - 100);
     return false;
   }
 }
 
 
+
+//In state one, the space bar clears the user guess so they can make a new guess.
+//In state two, the space bar resets the game.
 function keyTyped() {
   if (state === 1) {
     if (key === " ") {
@@ -210,8 +257,8 @@ function keyTyped() {
       guessesMade = 0;
 
 
-      for (let x=0; x<cols; x++) {
-        for (let y=0; y<rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        for (let y = 0; y < rows; y++) {
           grid[x][y][1] = 0;
         }
       }
@@ -226,6 +273,8 @@ function keyTyped() {
 }
 
 
+
+//Counts down from 60 seconds so the user knows how much time they have left.
 function countdownTimer() {
   if (timeLeft >= 0) {
     if (frameCount % 60 !== 0) {
@@ -244,6 +293,11 @@ function countdownTimer() {
 }
 
 
+
+//Displays a 'You Win!' or 'Game Over' screen depending on whether the counter reached 8.
+//If it did, that means that the user has found all matches, otherwise, they ran out of time.
+//This function also resets the game so that once the space bar is clicked, a new game can
+//be played with the locations of the elements shuffled. 
 function resetGame() {
   allElements = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
   guess = [];
