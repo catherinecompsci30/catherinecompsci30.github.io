@@ -196,12 +196,12 @@ function keyTyped() {
 
 //Counts down from 60 seconds so the user knows how much time they have left.
 function countdownTimer() {
+  textSize(20);
+  fill(0);
+  textAlign(CENTER);
+  text('Time Remaining: ' + timeLeft + ' seconds', width / 2 + 200 , 380);
   if (timeLeft >= 0) {
     if (frameCount % 60 !== 0) {
-      textSize(20);
-      fill(0);
-      textAlign(CENTER);
-      text('Time Remaining: ' + timeLeft + ' seconds', width / 2 + 200 , 380);
     }
     else {
       timeLeft -= 1;
