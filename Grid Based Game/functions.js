@@ -52,7 +52,6 @@ function displayGrid() {
 
 //Displays the game title and the instructions.
 function gameInstructions() {
-
   textStyle(BOLD);
   textSize(90);
   textAlign(CENTER);
@@ -62,7 +61,7 @@ function gameInstructions() {
   let instructions = [""
     ,"Click on a box to reveal a chemical element. \n"
     ,"Find two of the same element in order to have a match.  \n"
-    ,"Press the SPACE BAR to make a new guess.  \n"
+    ,"Press the SPACE BAR after each guess.  \n"
     ,"Find all matches before the time runs out!"
   ].join("");
 
