@@ -3,10 +3,10 @@
 // Mar. 20, 2018
 
 let heights = [];
-let numberOfRectangles = 1000;
+let numberOfRectangles = 2000;
 
 let time = 0;
-let dt = 0.01;
+let dt = 0.0018;
 
 let flag;
 
