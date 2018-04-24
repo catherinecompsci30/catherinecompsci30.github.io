@@ -4,11 +4,12 @@
 
 let amp;
 let stretch;
-let angle = 0;
-let inc = (Math.PI)*2 / 100.0;
+let angle;
+let inc = (Math.PI)*2 / 80.0;
+let heightsArray = [];
 
 function setup() {
-  createCanvas (windowWidth, windowHeight);
+  createCanvas (1200, 600);
   amp = 40;
   stretch = 4;
 }
@@ -19,11 +20,12 @@ function draw() {
 }
 
 function oneTerrainChunk() {
-  strokeWeight(5);
-  strokeCap(ROUND);
+  strokeWeight(1);
   smooth();
-  for (let i = 0; i < width; i++) {
+  angle = 0;
+  for (let i = 0; i < 80; i++) {
     line(i * stretch, height, i *  stretch, height/1.3 - 2*(sin(angle) * amp));
+    heightsArray.push([i *  stretch, height/1.3 - 2*(sin(angle) * amp)]);
     angle += inc;
   }
 }
