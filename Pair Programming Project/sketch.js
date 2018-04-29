@@ -2,6 +2,16 @@
 // Catherine Liu & Csaba Nemeth
 // May 2, 2018
 
+
+//Rules:
+// - hold down the mouse to make the ball accelerate.
+// - release the mouse for the ball to fly in the air.
+// - don't crash into the side of a hill or else you will lose.
+//
+//Extra for Experts:
+// - used the sin() funtion to generate the terrain.
+// - used the map() function to assign points between values.
+
 let state;
 
 let counter;
