@@ -22,7 +22,7 @@ let stretch;
 let angle;
 let inc = Math.PI*2 / 80.0;
 let heightsArray = [];
-let moveLength = 6;
+let moveLength = 8;
 
 let passedHeight = false;
 
@@ -43,13 +43,12 @@ function setup() {
   counter = -1;
   myBall = new Ball();
 
-  stretch = floor(random(5, 10));
+  stretch = floor(random(7, 12));
   generateWaveHeights(4, 1200);
 }
 
 function draw() {
   background(0);
-  noTint();
   imageMode(CORNER);
   image(backgroundImage, 0, 0, width, height);
   strokeWeight(3);
@@ -67,10 +66,13 @@ function draw() {
     scoreCount();
 
     if (mouseIsPressed) {
-      moveLength = 8;
+      moveLength += 0.16;
+      myBall.yvelocity += 0.2;
     }
     else {
-      moveLength = 6;
+      if (moveLength > 6) {
+        moveLength -= 0.08;
+      }
     }
   }
 }
@@ -93,7 +95,7 @@ function scoreCount() {
   text('Score: ' + counter, 1100 , 30);
 
   if (passedHeight === false) {
-    if (myBall.y <= 300) {
+    if (myBall.y <= 250) {
       passedHeight = true;
       counter += 1;
       if (counter > 0) {
@@ -138,6 +140,7 @@ function drawSinWave() {
         stroke(255, 0, 0);
         strokeWeight(10);
         myBall.lowerRange = floor(heightsArray[i][1]) - 30;
+        myBall.index = i;
       }
     }
 
@@ -170,43 +173,53 @@ class Ball {
 
     this.x = 200;
     this.y = 20;
+    this.prevY = this.y;
+    this.startHeight = 0;
 
-    this.velocity = 0;
-    this.gravity;
+    this.yVelocity = 0;
+
+    this.gravity = 0.2;
+    this.lowerRange;
     this.radius = 20;
-    this.contact = false;
 
-    this.division;
-    this.lowerRange = 580;
+    this.contact = false;
+    this.upCounter = 0;
 
   }
   display() {
-    noStroke();
-    fill(255);
-    //this.radius = map(this.y, 0, windowHeight, 10, 38);
-    this.gravity = map(this.y, 0, windowHeight, 0.06, 0.9);
-    ellipse(this.x, this.y, this.radius, this.radius);
 
+    fill(255);
+    this.radius = map(this.y, 0, windowHeight, 5, 70);
+    this.gravity = map(this.y, 0, windowHeight, 0.2, 1);
+    ellipse(this.x, this.y, this.radius, this.radius);
   }
+
   move() {
-    if (mouseIsPressed) {
-      this.velocity += 0.2;
-    }
-    if (this.y > this.lowerRange) {
-      this.velocity = this.velocity * - 1;
+    this.yVelocity += this.gravity;
+    this.y += this.yVelocity;
+
+    if (this.y >= this.lowerRange) {
+      this.y = this.lowerRange;
+
+      if (!this.contact) {
+        if (heightsArray[this.index][1] > heightsArray[this.index + 1][1] + 2) {
+          if (moveLength > 30) {
+            text("DEAD",this.x, this.y);
+          }
+          this.yVelocity = this.yVelocity/2;
+          moveLength -= 0.3;
+        }
+      }
       this.contact = true;
     }
-    if (this.contact) {
-      this.y = this.lowerRange;
-      if (mouseIsPressed) {
-        this.velocity -= 0.2;
-      }
-      if (!mouseIsPressed) {
-        this.contact = false;
-      }
+    else {
+      this.contact = false;
     }
-    this.velocity += this.gravity;
-    this.y += this.velocity;
 
+    this.yVelocity = this.y - this.prevY;
+    if (this.yVelocity < -16) {
+      this.yVelocity = -16;
+    }
+    this.prevY = this.y;
   }
 }
