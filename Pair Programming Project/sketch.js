@@ -19,6 +19,7 @@ let counter;
 let myBall;
 let amp;
 let stretch;
+
 let angle;
 let inc = Math.PI*2 / 80.0;
 let heightsArray = [];
@@ -28,6 +29,8 @@ let passedHeight = false;
 
 let backgroundImage;
 let scoreSound;
+
+let lineSize;
 
 
 
@@ -43,11 +46,13 @@ function setup() {
   counter = -1;
   myBall = new Ball();
 
-  stretch = floor(random(7, 12));
+  stretch = 6;
   generateWaveHeights(4, 1200);
 }
 
 function draw() {
+
+
   background(0);
   imageMode(CORNER);
   image(backgroundImage, 0, 0, width, height);
@@ -66,12 +71,14 @@ function draw() {
     scoreCount();
 
     if (mouseIsPressed) {
-      moveLength += 0.16;
-      myBall.yvelocity += 0.2;
+      moveLength += 0.11;
+      if (moveLength >= 15) {
+        moveLength = 15;
+      }
     }
     else {
-      if (moveLength > 6) {
-        moveLength -= 0.08;
+      if (moveLength > 6 && moveLength < 0) {
+        moveLength -= 0.04;
       }
     }
   }
@@ -87,15 +94,15 @@ function keyTyped() {
 
 function scoreCount() {
 
-  textSize(20);
-  stroke(202, 73, 245);
-  strokeWeight(2);
+  textSize(30);
+  stroke(214, 135, 245);
+  strokeWeight(4);
   fill(0);
   textAlign(CENTER);
-  text('Score: ' + counter, 1100 , 30);
+  text('Score: ' + counter, 1080 , 30);
 
   if (passedHeight === false) {
-    if (myBall.y <= 250) {
+    if (myBall.y <= 150) {
       passedHeight = true;
       counter += 1;
       if (counter > 0) {
@@ -111,6 +118,7 @@ function scoreCount() {
 
 function startScreen() {
   textStyle(BOLD);
+  stroke(22, 224, 190);
   textSize(48);
   textAlign(CENTER);
   textFont('Courier New');
@@ -121,38 +129,29 @@ function startScreen() {
 
 function generateWaveHeights(stretch, start) {
   angle = 0;
-  for (let i = 0; i < 81; i++) {
+  for (let i = 0; i < 80; i++) {
     heightsArray.push([i *  stretch + start, height/1.3 - 2*(sin(angle) * amp)]);
     angle += inc;
   }
-  return stretch;
 }
 
 
 
 function drawSinWave() {
   for (let i = 0; i < heightsArray.length; i++) {
-    stroke(45, 224, 52);
-    strokeWeight(1);
+    stroke(22, 224, 190);
+    strokeWeight(3);
 
     if (state === 2) {
       if (floor(heightsArray[i][0]) - 5 < myBall.x && floor(heightsArray[i][0]) + 5 > myBall.x) {
-        stroke(255, 0, 0);
-        strokeWeight(10);
         myBall.lowerRange = floor(heightsArray[i][1]) - 30;
         myBall.index = i;
       }
     }
 
     point(heightsArray[i][0], heightsArray[i][1]);
-    line(heightsArray[i][0], heightsArray[i][1], heightsArray[i][0] + 50, heightsArray[i][1]);
-
-    // if (i === heightsArray.length - 1) {
-    //   point(heightsArray[i][0], heightsArray[i][1]);
-    // }
-    // else {
-    //   line(heightsArray[i][0], heightsArray[i][1], heightsArray[i+1][0], heightsArray[i+1][1]);
-    // }
+    line(heightsArray[i][0], heightsArray[i][1], heightsArray[i][0] + 20, heightsArray[i][1]);
+    noStroke();
 
     if (heightsArray[i][0] <= 0) {
       heightsArray.shift();
@@ -161,9 +160,13 @@ function drawSinWave() {
     heightsArray[i][0] -= moveLength;
   }
   if (heightsArray[heightsArray.length-1][0] < 1200) {
-    generateWaveHeights(random(stretch - 2, stretch + 2), 1198);
+
+    stretch = stretch + random(-2, 2);
+    if (stretch < 4 || stretch > 9) {
+      stretch = 5;
+    }
+    generateWaveHeights(stretch, 1200);
   }
-  return stretch;
 }
 
 
@@ -184,6 +187,7 @@ class Ball {
 
     this.contact = false;
     this.upCounter = 0;
+    this.hit = false;
 
   }
   display() {
@@ -203,10 +207,11 @@ class Ball {
 
       if (!this.contact) {
         if (heightsArray[this.index][1] > heightsArray[this.index + 1][1] + 2) {
-          if (moveLength > 30) {
+          if (moveLength > 20) {
+            textSize(100);
             text("DEAD",this.x, this.y);
           }
-          this.yVelocity = this.yVelocity/2;
+          this.hit = true;
           moveLength -= 0.3;
         }
       }
@@ -219,6 +224,10 @@ class Ball {
     this.yVelocity = this.y - this.prevY;
     if (this.yVelocity < -16) {
       this.yVelocity = -16;
+    }
+    if (this.hit) {
+      this.yVelocity = 60;
+      this.hit = false;
     }
     this.prevY = this.y;
   }
