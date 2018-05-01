@@ -6,31 +6,50 @@
 //Rules:
 // - hold down the mouse to make the ball accelerate.
 // - release the mouse for the ball to fly in the air.
-// - don't crash into the side of a hill or else you will lose.
+// - fly high enough to score a point.
+// - don't crash into the side of a hill or else your ball
+//   will lose all momentum and die.
 //
 //Extra for Experts:
 // - used the sin() funtion to generate the terrain.
-// - used the map() function to assign points between values.
+// - used the map() function to assign points between values and to change
+//   variables depending on other variables.
+//
+//Note: don't mind the choppy terrain (especially when the sin wave has a small stretch).
+//
+//Csaba:
+// - ball class and movement.
+// - logic of the game.
+//Catherine:
+// - generated terrain.
+// - score display, start screen, sound effects.
+//Together:
+// - end screen, commenting, organization, trouble shooting.
 
 let state;
 
-let counter;
-
+//global variable for Ball class.
 let myBall;
+
+//global variables to draw sin waves.
 let amp;
 let stretch;
-
 let angle;
 let inc = Math.PI*2 / 80.0;
+let lineSize;
+
+//array containing heights of different sin waves.
 let heightsArray = [];
+
+//global variable that controls the speed of the terrain (x velocity of ball).
 let moveLength = 8;
 
+//global variables to keep track of score.
 let passedHeight = false;
+let counter;
 
 let backgroundImage;
 let scoreSound;
-
-let lineSize;
 
 
 
@@ -39,57 +58,83 @@ function preload() {
   scoreSound = loadSound("assets/ding.mp3");
 }
 
+
+
 function setup() {
   createCanvas(1200, 600);
+
   state = 1;
   amp = 40;
   counter = -1;
+  stretch = 6;
+
   myBall = new Ball();
 
-  stretch = 6;
   generateWaveHeights(4, 1200);
 }
 
+
+
 function draw() {
-
-
-  background(0);
+  //displays background image.
   imageMode(CORNER);
   image(backgroundImage, 0, 0, width, height);
-  strokeWeight(3);
 
+  strokeWeight(3);
   drawSinWave();
 
+  //before the user presses space bar to play.
   if (state === 1) {
     startScreen();
   }
-
+  //after game begins.
   else if (state === 2) {
     myBall.display();
     myBall.move();
 
     scoreCount();
 
+    //shifts the terrain to look like ball is moving with physical limitations.
+    // - air resistance, friction, etc.
     if (mouseIsPressed) {
-      moveLength += 0.11;
-      if (moveLength >= 15) {
-        moveLength = 15;
+      moveLength += 0.1;
+      if (moveLength >= 22) {
+        moveLength = 22;
       }
     }
     else {
       if (moveLength > 6 && moveLength < 0) {
-        moveLength -= 0.04;
+        moveLength -= 0.07;
       }
     }
   }
+
+  else if (state === 3) {
+    background(255, 0, 0);
+    endScreen();
+  }
 }
+
 
 
 function keyTyped() {
   if (key === ' ') {
-    state = 2;
+    if (state === 1) {
+      state = 2;
+    }
+    else if (state === 3) {
+      heightsArray = [];
+      myBall = new Ball();
+      generateWaveHeights(4, 1200);
+      moveLength = 8;
+      state = 1;
+      counter = -1;
+    }
+
   }
+
 }
+
 
 
 function scoreCount() {
@@ -101,6 +146,8 @@ function scoreCount() {
   textAlign(CENTER);
   text('Score: ' + counter, 1080 , 30);
 
+  //if the ball reaches a certain height approaching it from below, the user will
+  //gain a point and a sound effect will play.
   if (passedHeight === false) {
     if (myBall.y <= 150) {
       passedHeight = true;
@@ -110,12 +157,14 @@ function scoreCount() {
       }
     }
   }
-  if (myBall.y >= 300) {
+  if (myBall.y >= 150) {
     passedHeight = false;
   }
 }
 
 
+
+//game begins when user presses space bar.
 function startScreen() {
   textStyle(BOLD);
   stroke(22, 224, 190);
@@ -127,6 +176,24 @@ function startScreen() {
   text("PRESS SPACE BAR TO PLAY", 600, 150);
 }
 
+
+function endScreen() {
+  textStyle(BOLD);
+  stroke(0);
+  textSize(56);
+  textAlign(CENTER);
+  textFont('Courier New');
+  strokeWeight(1);
+  text("PRESS SPACE BAR TO PLAY AGAIN", 600, 300);
+  textSize(30);
+  text("Score: " + counter, 600, 400);
+
+}
+
+
+
+//makes one period length of a sin wave with an input stretch and start position
+//and pushes (x, y) coordinates of each generated point into an array.
 function generateWaveHeights(stretch, start) {
   angle = 0;
   for (let i = 0; i < 80; i++) {
@@ -137,30 +204,38 @@ function generateWaveHeights(stretch, start) {
 
 
 
+//draws lines at each coordinate from heightsArray, pushes and removes new wave
+//segments once a previous one is off-screen, translates sin waves to the left to
+//imitate motion, and feeds information to Ball object.
 function drawSinWave() {
   for (let i = 0; i < heightsArray.length; i++) {
     stroke(22, 224, 190);
     strokeWeight(3);
 
+    //gives the y value of the sin coordinate to the Ball object at the x position of the ball.
     if (state === 2) {
       if (floor(heightsArray[i][0]) - 5 < myBall.x && floor(heightsArray[i][0]) + 5 > myBall.x) {
-        myBall.lowerRange = floor(heightsArray[i][1]) - 30;
+        myBall.lowerRange = floor(heightsArray[i][1]) - 35;
         myBall.index = i;
       }
     }
 
-    point(heightsArray[i][0], heightsArray[i][1]);
+    //draws lines at coordinates to make terrain.
     line(heightsArray[i][0], heightsArray[i][1], heightsArray[i][0] + 20, heightsArray[i][1]);
     noStroke();
 
+    //removes coordinate from heightsArray once off-screen.
     if (heightsArray[i][0] <= 0) {
       heightsArray.shift();
     }
 
+    //translates x values of all coordinates to the left.
     heightsArray[i][0] -= moveLength;
   }
-  if (heightsArray[heightsArray.length-1][0] < 1200) {
 
+  //pushes (x, y) coordinates of a new sin wave with semi-random stretch to heightsArray
+  //once all current coordinates are on screen.
+  if (heightsArray[heightsArray.length-1][0] < 1200) {
     stretch = stretch + random(-2, 2);
     if (stretch < 4 || stretch > 9) {
       stretch = 5;
@@ -177,51 +252,62 @@ class Ball {
     this.x = 200;
     this.y = 20;
     this.prevY = this.y;
-    this.startHeight = 0;
+    this.radius = 2;
 
     this.yVelocity = 0;
-
     this.gravity = 0.2;
+
     this.lowerRange;
-    this.radius = 20;
 
     this.contact = false;
-    this.upCounter = 0;
     this.hit = false;
-
   }
-  display() {
 
+  //displays ball.
+  display() {
     fill(255);
-    this.radius = map(this.y, 0, windowHeight, 5, 70);
-    this.gravity = map(this.y, 0, windowHeight, 0.2, 1);
     ellipse(this.x, this.y, this.radius, this.radius);
   }
 
+  //completes all calculations neccesary for the motion of the ball.
   move() {
+    //uses the map() function to variate radius and gravitational strength based
+    //on the height of the ball.
+    this.radius = map(this.y, 0, windowHeight, 5, 70);
+    this.gravity = map(this.y, 0, windowHeight, 0.2, 1);
+
+    //applies gravitational force to ball.
     this.yVelocity += this.gravity;
     this.y += this.yVelocity;
 
+    //controls ball behaviour at boundary of sin waves to remain on terrain and
+    //calculates ball velocity based on slope of each 'hill'.
     if (this.y >= this.lowerRange) {
+      //locks position to hill.
       this.y = this.lowerRange;
 
+      //if this is the first contact...
       if (!this.contact) {
-        if (heightsArray[this.index][1] > heightsArray[this.index + 1][1] + 2) {
-          if (moveLength > 20) {
-            textSize(100);
-            text("DEAD",this.x, this.y);
+        //if the ball makes contact with a section of a hill with positive slope
+        //and is travelling above a certain x velocity, the ball will lose momentum,
+        //and you could potentially die.
+        if (heightsArray[this.index][1] > heightsArray[this.index + 1][1] + 4  && this.yVelocity > 20) {
+          if (moveLength >= 15) {
+            state = 3;
           }
           this.hit = true;
-          moveLength -= 0.3;
+          // moveLength -= 1;
         }
+        this.contact = true;
       }
-      this.contact = true;
-    }
-    else {
-      this.contact = false;
+      else {
+        this.contact = false;
+      }
     }
 
+    //calcualtes current y velocity by looking at the change in pixels in one frame.
     this.yVelocity = this.y - this.prevY;
+    //sets limitation on maximum velocity.
     if (this.yVelocity < -16) {
       this.yVelocity = -16;
     }
@@ -229,6 +315,7 @@ class Ball {
       this.yVelocity = 60;
       this.hit = false;
     }
+    //holds information about the previous position of the ball.
     this.prevY = this.y;
   }
 }
